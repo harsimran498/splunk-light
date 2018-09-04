@@ -10,6 +10,13 @@ elif [ "$1" = 'start-service' ]; then
   if [[ "${SPLUNK_USER}:${SPLUNK_GROUP}" != "$(stat --format %U:%G ${SPLUNK_HOME})" ]]; then
     chown -R ${SPLUNK_USER}:${SPLUNK_GROUP} ${SPLUNK_HOME}
   fi
+  
+  # Add default admin creds - something that popped up recently
+  cat <<EOF > $SPLUNK_HOME/etc/system/local/user-seed.conf
+[user_info]
+USERNAME = admin
+PASSWORD = changeme
+EOF
 
   # If these files are different override etc folder (possible that this is upgrade or first start cases)
   # Also override ownership of these files to splunk:splunk
